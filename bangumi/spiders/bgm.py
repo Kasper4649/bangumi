@@ -7,15 +7,16 @@ from scrapy.spiders import CrawlSpider, Rule
 class BgmSpider(CrawlSpider):
     name = 'bgm'
     allowed_domains = ['bgm.tv']
-    start_urls = ["https://bgm.tv/book/browser?sort=rank&page=1"]
+    start_urls = ["https://bgm.tv/music/browser?sort=rank&page=1"]
 
     rules = (
-        Rule(LinkExtractor(allow=r'.+sort=rank&page=\d+'), callback='parse_item', follow=True),
+        Rule(LinkExtractor(allow=r'https://bgm.tv/music/browser?sort=rank&page=\d+'), follow=True),
+        Rule(LinkExtractor(allow=r'https://bgm.tv/subject/\d+'), callback='parse_detail', follow=False)
     )
 
-    def parse_item(self, response):
+    def parse_detail(self, response):
         item = {}
-        # item['domain_id'] = response.xpath('//input[@id="sid"]/@value').get()
-        # item['name'] = response.xpath('//div[@id="name"]').get()
-        # item['description'] = response.xpath('//div[@id="description"]').get()
+        item['id'] = response.xpath('//h1[@class="nameSingle"]/a/@href').get().replace("/subject/", "")
+        item['name'] = response.xpath('//h1[@class="nameSingle"]/a/text()').get()
+        # 下同省略
         return item

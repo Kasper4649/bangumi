@@ -10,8 +10,8 @@ class BgmSpider(CrawlSpider):
     start_urls = ["https://bgm.tv/music/browser?sort=rank&page=1"]
 
     rules = (
-        Rule(LinkExtractor(allow=r'https://bgm.tv/music/browser?sort=rank&page=\d+'), follow=True),
-        Rule(LinkExtractor(allow=r'https://bgm.tv/subject/\d+'), callback='parse_detail', follow=False)
+        Rule(LinkExtractor(allow=r'&page=\d+')),
+        Rule(LinkExtractor(allow=r'https://bgm.tv/subject/\d+'), callback='parse_detail'),
     )
 
     def parse_detail(self, response):
